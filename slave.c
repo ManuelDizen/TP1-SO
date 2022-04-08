@@ -33,14 +33,15 @@ void checkPipe(int fd){
 char * getPath(int fd){
     int keepReading = 1;
     int pathSize = 0;
-    int bytesRead = 0;
 
-    char * path = malloc(sizeof(BLOCK));
+    //char * path = malloc(sizeof(BLOCK));
+    char *path = malloc(BLOCK);
     if (path == NULL){
         perror("Not enough memory\n");
         exit(EXIT_FAILURE);
     }
 
+    int bytesRead = 0;
     while(keepReading){
         bytesRead = read(fd, &keepReading, 1);
         if(bytesRead <= 0){

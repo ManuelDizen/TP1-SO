@@ -19,7 +19,7 @@ int main(int argc, char * argv[]){
 
     initialShmAddr = currentShmAddr = createShm();
     initSemaphores(initialShmAddr);
-
+    write(STDOUT_FILENO, "Shared memory name: ", 21);
     write(STDOUT_FILENO, SHM_NAME, sizeof(SHM_NAME));
     
     int finished = 1;
@@ -47,6 +47,7 @@ int main(int argc, char * argv[]){
 
     unlinkShm(initialShmAddr);
     closeSemaphores();
+    clearQueue(pathsToFiles);
     free(pathsToFiles);
 
     exit(EXIT_SUCCESS);
@@ -272,7 +273,9 @@ void startFileQueueRec(Queue * pathsToFiles, char * path){
 
 int isACnf(char * path){
     char * auxp = strrchr(path, '.'); // https://stackoverflow.com/questions/5309471/getting-file-extension-in-c
-    char * ext = malloc(sizeof(MAX_EXTENSION));
+    //char * ext = malloc(sizeof(MAX_EXTENSION));
+    char * ext = malloc(MAX_EXTENSION);
+    
     if (ext == NULL){
         perror("Not enough memory\n");
         exit(EXIT_FAILURE);
@@ -285,13 +288,13 @@ int isACnf(char * path){
     }
     ext[i] = '\0';
     int a = strcmp(".cnf", ext);
+    free(ext);
     return a;
 }
 
 void startProcessing(Queue * pathsToFiles, int nfiles, int outPipes[N_SLAVES][2]){
     int evaluate = N_SLAVES*N_INITIAL_FILES;
     int i = 0;
-    int j = 0;
     char amount;
     if(evaluate > nfiles){ //le mandamos 1 a cada uno
         int auxVar = nfiles;
@@ -303,6 +306,7 @@ void startProcessing(Queue * pathsToFiles, int nfiles, int outPipes[N_SLAVES][2]
         }
     }
     else{ //le mandamos N_INITIAL_FILES a cada uno
+        int j = 0;
         for(i = 0; i < N_SLAVES; i++){ 
             amount = N_INITIAL_FILES;
             write(outPipes[i][1], &amount, sizeof(char));
@@ -387,15 +391,16 @@ void sendf(int fd, Queue * pathsToFiles){
 char * readFromSlave(int fd){
     int keepReading = 1;
     int pathSize = 0;
-    int bytesRead = 0;
+    //int bytesRead = 0;
 
-    char * path = malloc(sizeof(BLOCK));
+    //char * path = malloc(sizeof(BLOCK));
+    char * path = malloc(BLOCK);
     if (path == NULL){
         perror("Not enough memory\n");
         exit(EXIT_FAILURE);
     }
     while(keepReading){
-        bytesRead = read(fd, &keepReading, 1);
+        int bytesRead = read(fd, &keepReading, 1);
         if(bytesRead <= 0){
             perror("Failed to read pipe\n");
             exit(EXIT_FAILURE);

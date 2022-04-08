@@ -1,0 +1,88 @@
+Análisis con Valgrind y CPP:
+1) Valgrind
+Error 1: 
+    Valgrind indica una escritura inválida en: 
+
+    ==278== Invalid write of size 1
+    ==278==    at 0x401CDA: isACnf (solve.c:286)
+
+    Donde el código dice:
+
+    while((c = *auxp) != '\0'){
+            ext[i++] = c;
+            auxp += 1;
+        }
+    ext[i] = '\0';
+
+    Siendo la última linea la 286
+
+    No consideramos que sea un error, es una escritura para marcar el final del string.
+
+Error 2:
+    ==278== Invalid read of size 1
+    ==278==    at 0x4C2D1EB: strcmp (vg_replace_strmem.c:755)
+    ==278==    by 0x401CED: isACnf (solve.c:287)
+
+Código:
+    int a = strcmp(".cnf", ext);
+    return a;
+
+Es un strcmp para ver si la extensión del archivo se corresponde con un .cnf
+Nuevamente, creemos que no se trata de un error
+
+Error 3:
+    ==278==  Address 0x5605104 is 0 bytes after a block of size 4 alloc'd
+    ==278==    at 0x4C28C20: malloc (vg_replace_malloc.c:296)
+    ==278==    by 0x401C76: isACnf (solve.c:275)
+
+Código:
+    int isACnf(char * path){
+        char * auxp = strrchr(path, '.'); 
+        char * ext = malloc(sizeof(MAX_EXTENSION));
+
+No comprendemos porqué habría un error de malloc aquí (el chequeo posterior por si es nulo esta realizado).
+
+
+
+CPP-Check:
+
+root@5b7d7d25ca0e:~# cppcheck --enable=all solve.c queue.c slave.c view.c
+Checking queue.c...
+1/4 files checked 8% done
+Checking slave.c...
+[slave.c:44]: (style) The scope of the variable 'bytesRead' can be reduced.
+2/4 files checked 22% done
+Checking solve.c...
+[solve.c:108]: (portability) 'currentShmAddr' is of type 'void *'. When using void pointers in calculations, the behaviour is undefined.
+3/4 files checked 88% done
+Checking view.c...
+[view.c:92]: (portability) 'shmAddr' is of type 'void *'. When using void pointers in calculations, the behaviour is undefined.
+[view.c:12]: (error) Buffer overrun possible for long command line arguments.
+4/4 files checked 100% done
+Checking usage of global functions..
+(information) Cppcheck cannot find all the include files (use --check-config for details)
+
+Error 1: 
+    int bytesRead = 0;
+    while(keepReading){
+        bytesRead = read(fd, &keepReading, 1);
+        if(bytesRead <= 0){
+            perror("Failed to read pipe\n");
+            exit(EXIT_FAILURE);
+        }
+        ...
+    }
+
+Creemos que, dado que por como esta escrito el código, se accederá de cualquier manera al ciclo while,
+definirla afuera o adentro es indiferente.
+
+Errores 2 y 3: Nosotros tratamos los void * como direcciones de memoria, y es por eso que utilizamos
+aritmetica de punteros con los mismos. 
+
+Error 4: 
+    strcpy(shmName, argv[1]);
+
+shmName esta inicializado en un tamaño de 100 bytes, por lo que sería necesario un string largo para
+generar un problema. De cualquier manera, por la forma en que esta elaborado el código, el programa
+encontrará un problema antes de querer poner cualquier string que no sea "shm", dado que no existe
+otra manera posible de ejecutar el código.

@@ -2,8 +2,13 @@ CC = gcc
 CFLAGS = -Wall -g -pthread -std=gnu99
 TARGETS = view solve slave
 SOURCES = queue
+INSTALL = apt-get install
+MINISAT = minisat
 
-all: clean $(TARGETS)
+all: dependencies clean $(TARGETS)
+
+dependencies:
+	$(INSTALL) $(MINISAT)
 
 $(TARGETS):
 	$(CC) $(CFLAGS) $(SOURCES:=.c) $@.c -lrt -o $@
