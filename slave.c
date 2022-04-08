@@ -36,7 +36,7 @@ char * getPath(int fd){
     int bytesRead = 0;
 
     char * path = malloc(sizeof(BLOCK));
-    if (newNode->data == null){
+    if (path == NULL){
         perror("Not enough memory\n");
         exit(EXIT_FAILURE);
     }

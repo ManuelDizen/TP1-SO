@@ -1,4 +1,5 @@
 #include "view.h"
+#include "solve.h"
 
 sem_t * semRead = NULL, * semWrite = NULL;
 
@@ -22,7 +23,7 @@ int main (int argc, char ** argv){
 
     printShm(shmAddr);
 
-    unlinkShm(shmAddr, shmFd);
+    unlinkSharedMem(shmAddr, shmFd);
     
 }
 
@@ -52,7 +53,7 @@ void * setupShm(char * shmName, int * shmFd){
 }
 
 
-void unlinkShm(void * shmAddr, int shmFd){
+void unlinkSharedMem(void * shmAddr, int shmFd){
     struct stat sb;
 
     if (fstat(shmFd, &sb) == -1){
@@ -71,13 +72,13 @@ void semSetup(void * shmAddr, int shmFd){
     semRead = sem_open(SEM_READ_NAME, O_RDWR);
     if (semRead == SEM_FAILED){
         perror("Error linking read semaphore\n");
-        unlinkShm(shmAddr, shmFd);
+        unlinkSharedMem(shmAddr, shmFd);
         exit(EXIT_FAILURE);
     }
     semWrite = sem_open(SEM_WRITE_NAME, O_RDWR);
     if (semWrite == SEM_FAILED){
         perror("Error linking write semaphore\n");
-        unlinkShm(shmAddr, shmFd);
+        unlinkSharedMem(shmAddr, shmFd);
         exit(EXIT_FAILURE);
     }
 }

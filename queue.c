@@ -15,14 +15,14 @@ void queueInit(Queue *q, size_t memSize)
 int enqueue(Queue *q, const void *data)
 {
     node *newNode = (node *)malloc(sizeof(node));
-    if (newNode == null){
+    if (newNode == NULL){
         perror("Not enough memory\n");
         exit(EXIT_FAILURE);
     }
 
     newNode->data = malloc(q->memSize);
 
-    if (newNode->data == null){
+    if (newNode->data == NULL){
         free(newNode);
         perror("Not enough memory\n");
         exit(EXIT_FAILURE);

@@ -14,7 +14,7 @@
 
 //Conecta la shared memory 
 void * setupShm(char * shmName, int * shmFd);
-void unlinkShm(void * shmAddr, int shmFd);
+void unlinkSharedMem(void * shmAddr, int shmFd);
 void printShm(void * shmAddr);
 void semSetup(void * shmAddr, int shmFd);
 

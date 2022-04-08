@@ -1,2 +1,7 @@
-
+Number of variables:            30
+Number of clauses:              81
+CPU time              : 0.002377 s
+UNSATISFIABLE
+FileName: Tests/pigeon-5.cnf
+Slave ID: 3215
 

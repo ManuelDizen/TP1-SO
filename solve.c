@@ -7,7 +7,7 @@ int shmSize = 0;
 int main(int argc, char * argv[]){
     
     Queue * pathsToFiles = malloc(sizeof(*pathsToFiles));
-    if (pathsToFiles == null){
+    if (pathsToFiles == NULL){
         perror("Not enough memory\n");
         exit(EXIT_FAILURE);
     }
@@ -226,11 +226,11 @@ void killSlaves(int outPipes[N_SLAVES][2], int inPipes[N_SLAVES][2], int slavePI
 void startFileQueue(Queue * pathsToFiles, int argc, char ** argv){
     for(int i = 1; i < argc; i++){
         char * auxStr = malloc(strlen(argv[i]) + 1);
-        if (auxStr == null){
+        if (auxStr == NULL){
             perror("Not enough memory\n");
             exit(EXIT_FAILURE);
         }
-        strcpy(auxStr, argv[i]); //null terminated incluido en el cpy (man strcpy)
+        strcpy(auxStr, argv[i]); //NULL terminated incluido en el cpy (man strcpy)
         startFileQueueRec(pathsToFiles, auxStr);
     }
 }
@@ -253,7 +253,7 @@ void startFileQueueRec(Queue * pathsToFiles, char * path){
             //no es ni "." ni "..", vamos al paso recursivo
             int pathLen = strlen(path);
             char * auxStr = malloc(pathLen + strlen(entry->d_name) + 2);
-            if (auxStr == null){
+            if (auxStr == NULL){
                 perror("Not enough memory\n");
                 exit(EXIT_FAILURE);
             }
@@ -273,7 +273,7 @@ void startFileQueueRec(Queue * pathsToFiles, char * path){
 int isACnf(char * path){
     char * auxp = strrchr(path, '.'); // https://stackoverflow.com/questions/5309471/getting-file-extension-in-c
     char * ext = malloc(sizeof(MAX_EXTENSION));
-    if (ext == null){
+    if (ext == NULL){
         perror("Not enough memory\n");
         exit(EXIT_FAILURE);
     }
@@ -390,7 +390,7 @@ char * readFromSlave(int fd){
     int bytesRead = 0;
 
     char * path = malloc(sizeof(BLOCK));
-    if (path == null){
+    if (path == NULL){
         perror("Not enough memory\n");
         exit(EXIT_FAILURE);
     }
