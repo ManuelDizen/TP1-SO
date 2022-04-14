@@ -27,6 +27,11 @@ También se pueden ejecutar ambos procesos mediante un pipe sin necesidad de acl
 ./solve (path a directorio/archivo) | ./view
 ```
 
+#### Nota: El makefile contempla la instalación del programa "minisat", necesario para procesar los archivos .cnf . Al estar pensado para ser compilado en docker, no utiliza la keyword 'sudo'. En caso de querer instalar minisat localmente, es posible que el sistema requiera la instalación del minisat por separado. Para hacer esto, simplemente ejecute el comando, desde su consola local:
+```
+sudo apt-get install minisat
+```
+
 ## Integrantes del grupo:
 Nombre | Legajo
 -------|--------
