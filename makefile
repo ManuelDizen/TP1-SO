@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -g -pthread -std=gnu99
+CFLAGS = -Wall -g -pthread -std=gnu99 -Iinclude/
 TARGETS = view solve slave
 SOURCES = queue
 INSTALL = apt-get install

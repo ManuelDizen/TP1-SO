@@ -9,7 +9,7 @@
 #include "queue.h"
 
 #define FN_LIMIT 256
-#define BLOCK ROW_SIZE*COL_SIZE
+#define BLOCK (ROW_SIZE*COL_SIZE)
 #define MAX_OUTPUT_BUFF 3000
 #define ROW_SIZE 80
 #define COL_SIZE 19

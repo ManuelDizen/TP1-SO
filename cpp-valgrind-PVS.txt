@@ -86,3 +86,36 @@ shmName esta inicializado en un tamaño de 100 bytes, por lo que sería necesari
 generar un problema. De cualquier manera, por la forma en que esta elaborado el código, el programa
 encontrará un problema antes de querer poner cualquier string que no sea "shm", dado que no existe
 otra manera posible de ejecutar el código.
+
+
+3) PVS-Studio:
+root@481ce76442ba:~# cat report.tasks
+pvs-studio.com/en/docs/warnings/	1	err	Help: The documentation for all analyzer warnings is available here: https://pvs-studio.com/en/docs/warnings/.
+/root/slave.c	22	err	V579 The write function receives the pointer and its size as arguments. It is possibly a mistake. Inspect the third argument.
+/root/slave.c	22	err	V512 A call of the 'write' function will lead to overflow of the buffer 'finished'.
+/root/slave.c	19	note	V776 Potentially infinite loop.
+/root/slave.c	54	warn	V701 realloc() possible leak: when realloc() fails in allocating memory, original pointer 'path' is lost. Consider assigning realloc() to a temporary pointer.
+/root/slave.c	63	warn	V701 realloc() possible leak: when realloc() fails in allocating memory, original pointer 'path' is lost. Consider assigning realloc() to a temporary pointer.
+/root/slave.c	77	err	V579 The write function receives the pointer and its size as arguments. It is possibly a mistake. Inspect the third argument.
+/root/slave.c	77	err	V512 A call of the 'write' function will lead to overflow of the buffer 'finished'.
+/root/slave.h	12	note	V1003 The macro 'BLOCK' is a dangerous expression. The expression must be surrounded by parentheses.
+/root/solve.c	287	note	V522 There might be dereferencing of a potential null pointer 'auxp'.
+/root/solve.c	369	warn	V560 A part of conditional expression is always true: totalFiles > 0.
+/root/solve.c	411	warn	V701 realloc() possible leak: when realloc() fails in allocating memory, original pointer 'path' is lost. Consider assigning realloc() to a temporary pointer.
+/root/solve.c	420	warn	V701 realloc() possible leak: when realloc() fails in allocating memory, original pointer 'path' is lost. Consider assigning realloc() to a temporary pointer.
+/root/view.c	14	warn	V755 A copy from unsafe data source to a buffer of fixed size. Buffer overflow is possible.
+/root/view.c	93	warn	V1044 Loop break conditions do not depend on the number of iterations.
+
+Note de línea 19 de "slave.c": Es intencionalmente un loop infinito, que será finalizado una vez que el proceso esclavo
+no sea mas necesario.
+
+Warnings de lineas 54 y 63 de "slave.c": No es necesario preservar los punteros, si no hay mas memoria cierra el programa.
+
+Note de linea 12 de "slave.h": Corregido.
+Note de línea 287 de "solve.c": Corregido.
+Warn de línea 369 de "solve.c": TODO.
+Warns de 411 y 420 de "solve.c": Explicación igual a la de "slave.c"
+
+Warn de linea 14 de "view.c": Se estima un tamaño maximo para un nombre de shared memory. Pero, por las dudas
+el nombre lo estamos estableciendo nosotros, para achicar el margen de error.
+Warn línea 93 "view.c": TODO.

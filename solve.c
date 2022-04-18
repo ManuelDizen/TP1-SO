@@ -1,3 +1,5 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include "solve.h"
 
 sem_t * semRead = NULL, * semWrite = NULL;
@@ -281,10 +283,14 @@ int isACnf(char * path){
         exit(EXIT_FAILURE);
     }
     int i = 0;
+    int flag = 0;
     char c;
-    while((c = *auxp) != '\0'){
+    while(flag == 0 && (c = *auxp) != '\0'){ // "Lazy" operator
         ext[i++] = c;
         auxp += 1;
+        if(*auxp == NULL){
+            flag = 1;
+        }
     }
     ext[i] = '\0';
     int a = strcmp(".cnf", ext);
