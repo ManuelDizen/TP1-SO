@@ -1,4 +1,5 @@
-Análisis con Valgrind y CPP:
+Análisis con Valgrind, CPP, y PVS-Studio:
+
 1) Valgrind
 Error 1: 
     Valgrind indica una escritura inválida en: 
@@ -89,6 +90,7 @@ otra manera posible de ejecutar el código.
 
 
 3) PVS-Studio:
+
 root@481ce76442ba:~# cat report.tasks
 pvs-studio.com/en/docs/warnings/	1	err	Help: The documentation for all analyzer warnings is available here: https://pvs-studio.com/en/docs/warnings/.
 /root/slave.c	22	err	V579 The write function receives the pointer and its size as arguments. It is possibly a mistake. Inspect the third argument.
@@ -113,9 +115,8 @@ Warnings de lineas 54 y 63 de "slave.c": No es necesario preservar los punteros,
 
 Note de linea 12 de "slave.h": Corregido.
 Note de línea 287 de "solve.c": Corregido.
-Warn de línea 369 de "solve.c": TODO.
+
 Warns de 411 y 420 de "solve.c": Explicación igual a la de "slave.c"
 
 Warn de linea 14 de "view.c": Se estima un tamaño maximo para un nombre de shared memory. Pero, por las dudas
 el nombre lo estamos estableciendo nosotros, para achicar el margen de error.
-Warn línea 93 "view.c": TODO.
